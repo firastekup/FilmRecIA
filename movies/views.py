@@ -1,9 +1,9 @@
-# movies/views.py
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import authenticate
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 from .models import User, Film, Abonnement
 from .serializers import UserSerializer, FilmSerializer, AbonnementSerializer
 
@@ -20,10 +20,25 @@ class LoginView(APIView):
         password = request.data.get("password")
         user = authenticate(username=username, password=password)
         if user is not None:
-            if user.role == 'admin':
-                return Response({"message": "Redirect to admin dashboard", "role": "admin"}, status=status.HTTP_200_OK)
-            elif user.role == 'user':
-                return Response({"message": "Redirect to user dashboard", "role": "user"}, status=status.HTTP_200_OK)
+            # Générer un token JWT
+            refresh = RefreshToken.for_user(user)
+            user_data = {
+                "username": user.username,
+                "role": user.role,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "address": user.address,
+                "cin": user.cin,
+                "phone": user.phone,
+                "email": user.email,
+            }
+            return Response({
+                "message": "Login successful",
+                "user": user_data,
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+                "dashboard": "admin" if user.role == "admin" else "user"
+            }, status=status.HTTP_200_OK)
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 class AdminDashboardView(APIView):

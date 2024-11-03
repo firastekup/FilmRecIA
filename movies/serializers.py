@@ -1,11 +1,10 @@
-# movies/serializers.py
 from rest_framework import serializers
 from .models import User, Film, Abonnement
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'password', 'role')
+        fields = ('username', 'password', 'role', 'first_name', 'last_name', 'address', 'cin', 'phone', 'email')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -17,9 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
 class FilmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Film
-        fields = '__all__'
+        fields = '__all__'  # Inclure tous les champs de Film
 
 class AbonnementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Abonnement
-        fields = '__all__'
+        fields = '__all__'  # Inclure tous les champs d'Abonnement
