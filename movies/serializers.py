@@ -18,7 +18,9 @@ class FilmSerializer(serializers.ModelSerializer):
         model = Film
         fields = '__all__'  # Inclure tous les champs de Film
 
+
+
 class AbonnementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Abonnement
-        fields = '__all__'  # Inclure tous les champs d'Abonnement
+        fields = '__all__'  # Inclure tous les champs
