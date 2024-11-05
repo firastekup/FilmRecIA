@@ -1,3 +1,5 @@
+# views.py
+
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -20,7 +22,6 @@ class LoginView(APIView):
         password = request.data.get("password")
         user = authenticate(username=username, password=password)
         if user is not None:
-            # Générer un token JWT
             refresh = RefreshToken.for_user(user)
             user_data = {
                 "username": user.username,
@@ -62,7 +63,29 @@ class FilmListView(generics.ListAPIView):
     serializer_class = FilmSerializer
     permission_classes = [IsAuthenticated]
 
+# Ajout de films
+class FilmCreateView(generics.CreateAPIView):
+    queryset = Film.objects.all()
+    serializer_class = FilmSerializer
+    permission_classes = [IsAuthenticated]
+
+# Suppression de films
+class FilmDeleteView(generics.DestroyAPIView):
+    queryset = Film.objects.all()
+    serializer_class = FilmSerializer
+    permission_classes = [IsAuthenticated]
+
 class AbonnementListView(generics.ListAPIView):
     queryset = Abonnement.objects.all()
     serializer_class = AbonnementSerializer
     permission_classes = [IsAuthenticated]
+
+
+class AbonnementCreateView(generics.CreateAPIView):
+    queryset = Abonnement.objects.all()
+    serializer_class = AbonnementSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Associer l'abonnement à l'utilisateur connecté
+        serializer.save(user=self.request.user)

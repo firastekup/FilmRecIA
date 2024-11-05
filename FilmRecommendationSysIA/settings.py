@@ -52,7 +52,10 @@ MIDDLEWARE = [
 ]
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # Changez ceci en fonction de vos besoins
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # L'URL de votre application React
+]
+
 
 # REST framework settings
 REST_FRAMEWORK = {
@@ -86,7 +89,7 @@ WSGI_APPLICATION = 'FilmRecommendationSysIA.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'filmdata',
+        'NAME': 'filmsys',
         'USER': 'postgres',
         'PASSWORD': '12355878',
         'HOST': 'localhost',  # ou l'adresse de votre serveur PostgreSQL
